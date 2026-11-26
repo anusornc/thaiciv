@@ -1,0 +1,6 @@
+[project]
+name = "thaiciv"
+version = "0.1.0"
+description = "Thailand as a 4X strategy-game map, built from real public data"
+requires-python = ">=3.11"
+dependencies = []

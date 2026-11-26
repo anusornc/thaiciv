@@ -1,0 +1,17 @@
+# Pipeline raw downloads & interim caches (reproducible via `uv run python -m pipeline all`)
+data/
+
+# Python / uv
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# OS / Editor
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
