@@ -1289,6 +1289,7 @@ async function main() {
     reports.refresh?.();
     help.refresh?.();
     share.refresh?.();
+    pedia.refresh?.();
     if (state.selectedCity && !modes.mode) app.panels.city(state.selectedCity, panelCtx());
     else if (state.selectedState != null && !modes.mode) app.panels.state(state.selectedState, panelCtx());
     cache.key = null;

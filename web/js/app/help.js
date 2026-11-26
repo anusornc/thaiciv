@@ -61,8 +61,8 @@ export function initHelp() {
           <div class="help-row"><span class="keys">${keys.map((k) => `<kbd>${k}</kbd>`).join("")}</span><span>${what}</span></div>`).join("")}
         </section>`).join("")}</div>
       <p class="help-foot">${t(
-        'Every number traces back to public Thai &amp; global data: open the <b>Almanac</b> for sources. The link in the address bar always reopens this exact view. <b>thaiciv</b> is built on the MIT-licensed <i>usaciv</i> engine by Andrej Karpathy.',
-        'ตัวเลขทั้งหมดมาจากข้อมูลสาธารณะทางการของไทยและสากล เปิดดูรายละเอียดได้ใน <b>สารานุกรม (Almanac)</b> ลิงก์บนแถบที่อยู่สามารถแชร์เพื่อเปิดมุมมองเดิมได้ทันที <b>thaiciv</b> พัฒนาต่อยอดจากเอนจิน <i>usaciv</i> (MIT) ของ Andrej Karpathy'
+        '<b>Caution:</b> Educational visualization only — not a live emergency, medical, or drinking-water safety advisory. Verify critical figures via primary agencies in the <b>Almanac</b> (Caution &amp; Validation / Sources). Built on the MIT-licensed <i>usaciv</i> engine by Andrej Karpathy.',
+        '<b>ข้อควรระวัง:</b> ใช้เพื่อการเรียนรู้และสำรวจข้อมูลเท่านั้น ไม่ใช่ประกาศเตือนภัยหรือคำแนะนำความปลอดภัยน้ำดื่มแบบเรียลไทม์ โปรดตรวจสอบตัวเลขสำคัญจากหน่วยงานต้นทางใน <b>สารานุกรม (Almanac)</b> พัฒนาต่อยอดจากเอนจิน <i>usaciv</i> (MIT) ของ Andrej Karpathy'
       )}</p>`;
   }
   render();

@@ -45,23 +45,52 @@ uv run python -m pipeline all          # fetch → process → build web/data/*.
 uv run python -m unittest discover -s tests
 ```
 
-## Public Data Sources (13 Sources, 60 Checksummed Files)
+## Caution to Use & Limitations (ข้อควรระวังในการใช้งาน)
 
-| Source | Publisher | Used For |
-|---|---|---|
-| Gross Regional & Provincial Product (GPP) 1995–2024 | NESDC (`nesdc.go.th`) | Gold & sector yields, 19-sector GPP, specialization districts & badges |
-| Civil Registration Population (2020–2025) | DOPA (`stat.bora.dopa.go.th` & `data.go.th`) | 77-province population, 2021–2025 growth, non-Thai residents, 928 districts |
-| Household Socio-Economic Survey (SES) & Business Census | NSO (`catalogapi.nso.go.th`) | Monthly income, expenditure, debt, homeownership, migration, establishments |
-| Labor Force Survey (77 Provinces), ICT & Religion | NSO (`catalogapi.nso.go.th`) | Employment, unemployment rate, internet & religious heritage context |
-| Village-Level Disaster Risk (76 Provinces) | DOPA (`catalog.dopa.go.th`) | Flood, drought, storm, fire & landslide hazard exposure |
-| Surface-Water Arsenic (As) Monitoring & 2017–2025 Baseline | Chiang Rai Provincial Office / PCD / Chiang Rai PHO (`chiangrai.gdcatalog.go.th`) | 23 stations × 8 rounds (Kok, Sai, Ruak, Mekong & Thai controls), 2017–2025 baseline & national watchpoints |
-| Thailand ADM1 & ADM2 Boundaries | geoBoundaries / Royal Thai Survey Dept / OCHA | 77 province borders & 928 district (amphoe) boundaries |
-| ESA WorldCover 10m 2021 v200 (COG Overviews) | European Space Agency | True satellite land cover per 8 km hex (forest, rice/crop, urban, mangroves) |
-| ETOPO1 Global Relief via ERDDAP | NOAA NCEI | Elevation, hill-shading, mountain ranges & Gulf/Andaman depth |
-| Natural Earth 1:10m v5.1.2 | Natural Earth | Neighbors, rivers, lakes, highways & SRT rail lines |
-| Global Power Plant Database v1.3.0 | World Resources Institute (WRI) | Thai power plants (gas, coal, hydro dams, solar, wind, biomass) |
-| OurAirports Directory | OurAirports (Public Domain) | Thai international & domestic airports |
-| Wikidata Open Knowledge Graph | Wikidata (CC0) | National parks, universities, UNESCO sites, seaports & bases |
+> [!CAUTION]
+> **Informational & educational visualization only — not official government, medical, drinking-water safety, emergency, or investment advice.**
+> *(เพื่อการเรียนรู้และสำรวจข้อมูลสาธารณะเท่านั้น ไม่ใช่ประกาศทางการของหน่วยงานรัฐ ไม่ใช่คำแนะนำความปลอดภัยน้ำดื่มแบบเรียลไทม์ และไม่ใช่คำแนะนำด้านการแพทย์หรือการลงทุน)*
+
+Please keep the following limitations in mind before citing or acting on any figure in **thaiciv**:
+
+1. **Water Quality & Arsenic Safety (`ข้อควรระวังข้อมูลสารหนู`):**
+   - The Arsenic layer and **Water & Arsenic Advisor** display a snapshot of official Chiang Rai / PCD CSV monitoring data (23 stations × 8 rounds + 2017–2025 `KK01` baseline). **Do not use this map to decide whether tap, well, or river water is safe to drink, cook, or irrigate.**
+   - Unmonitored provinces/hexes show **`no data`** — this means no unified open-data CSV was available, **not** that the area is safe or uncontaminated.
+   - Always check live advisories from the [Pollution Control Department (PCD)](https://www.pcd.go.th/), Provincial Waterworks Authority (PWA), and local Public Health Offices.
+2. **Spatial Aggregation (`ความละเอียดเชิงพื้นที่`):**
+   - Each hex spans **8 km (~166 km²)**. Provincial indicators (GPP, household income, debt, unemployment, disaster counts) apply at the **province level** and do not capture street-, tambon-, or village-level differences.
+3. **Data Vintages & Provisional Figures (`รอบปีข้อมูล`):**
+   - Official releases cover different years: NESDC GPP **`2024p`** (preliminary), DOPA civil registration (`2020–2025`, registered population only — excludes unregistered migrants and tourists), NSO Socio-Economic & Labor Force Surveys (`2023–2024`), ESA WorldCover satellite imagery (`2021`), and Chiang Rai / PCD Arsenic monitoring (`2017–2026`).
+4. **Analytical Conventions (`ข้อกำหนดการประมวลผล`):**
+   - In the Chiang Rai Arsenic CSV, raw `'0'` entries mark **unsampled rounds** (excluded from averages, never treated as `0.000 mg/L`); `'<0.010'` below-detection values are counted as compliant and plotted at half detection limit (`0.005 mg/L`) on trend charts. The 5 purple national watchpoints provide documented context where no unified open-data CSV exists.
+
+### How to Independently Validate the Data
+
+- **In-app verification:** Click **Almanac (`สารานุกรม`) → Caution & Validation** or **Sources** to view every direct download URL, retrieval date, and **SHA-256 checksum**.
+- **Full machine-readable manifest:** Inspect [`web/data/sources.json`](web/data/sources.json) (60 checksummed files across 13 sources).
+- **Reproduce & run automated integrity checks:**
+  ```bash
+  uv run python -m pipeline all           # re-fetch from official URLs, rebuild & validate
+  uv run python -m unittest discover -s tests -v
+  ```
+
+## Public Data Sources & Official Validation References (13 Sources, 60 Checksummed Files)
+
+| Source | Publisher | Official Reference URL (for Validation) | Used For |
+|---|---|---|---|
+| Gross Regional & Provincial Product (GPP) 1995–2024p | NESDC | [nesdc.go.th](https://www.nesdc.go.th/) · [GPP-2024 Excel](https://www.nesdc.go.th/wp-content/uploads/2026/03/GPP-2024-On-Web-1995-2024.xlsx) | Gold & sector yields, 19-sector GPP, specialization districts & badges |
+| Civil Registration Population (2020–2025) | DOPA | [stat.bora.dopa.go.th](https://stat.bora.dopa.go.th/) | 77-province population, 2021–2025 growth, non-Thai residents, 928 districts |
+| Household Socio-Economic Survey (SES) & Business Census | NSO | [nso.go.th](https://www.nso.go.th/) · [NSO Open API](https://catalogapi.nso.go.th/) | Monthly income, expenditure, debt, homeownership, migration, establishments |
+| Labor Force Survey (77 Provinces), ICT & Religion | NSO | [nso.go.th](https://www.nso.go.th/) · [NSO Open API](https://catalogapi.nso.go.th/) | Employment, unemployment rate, internet & religious heritage context |
+| Village-Level Disaster Risk (76 Provinces) | DOPA | [catalog.dopa.go.th](https://catalog.dopa.go.th/dataset/c667e7aa-2e62-4c43-a8e1-dd78cfc0758c) | Flood, drought, storm, fire & landslide hazard exposure |
+| Surface-Water Arsenic (As) Monitoring & 2017–2025 Baseline | Chiang Rai Provincial Office / PCD / Chiang Rai PHO | [8-Round CSV Dataset](https://chiangrai.gdcatalog.go.th/dataset/e1fc8a4f-1d5c-4571-aff2-89a35e554a08) · [2017–2025 Baseline Dataset](https://chiangrai.gdcatalog.go.th/dataset/2e5aa282-25db-460c-ac6d-d38c4e1bf468) · [pcd.go.th](https://www.pcd.go.th/) | 23 stations × 8 rounds (Kok, Sai, Ruak, Mekong & Thai controls), 2017–2025 baseline & national watchpoints |
+| Thailand ADM1 & ADM2 Boundaries | geoBoundaries / RTSD / OCHA | [geoboundaries.org](https://www.geoboundaries.org/) | 77 province borders & 928 district (amphoe) boundaries |
+| ESA WorldCover 10m 2021 v200 | European Space Agency (ESA) | [esa-worldcover.org](https://esa-worldcover.org/) | True satellite land cover per 8 km hex (forest, rice/crop, urban, mangroves) |
+| ETOPO1 Global Relief (via ERDDAP) | NOAA NCEI | [ncei.noaa.gov/products/etopo-global-relief-model](https://www.ncei.noaa.gov/products/etopo-global-relief-model) | Elevation, hill-shading, mountain ranges & Gulf/Andaman depth |
+| Natural Earth 1:10m v5.1.2 | Natural Earth | [naturalearthdata.com](https://www.naturalearthdata.com/) | Neighbors, rivers, lakes, highways & SRT rail lines |
+| Global Power Plant Database v1.3.0 | World Resources Institute (WRI) | [datasets.wri.org/dataset/globalpowerplantdatabase](https://datasets.wri.org/dataset/globalpowerplantdatabase) | Thai power plants (gas, coal, hydro dams, solar, wind, biomass) |
+| OurAirports Directory | OurAirports (Public Domain) | [ourairports.com/data](https://ourairports.com/data/) | Thai international & domestic airports |
+| Wikidata Open Knowledge Graph | Wikidata (CC0) | [query.wikidata.org](https://query.wikidata.org/) | National parks, universities, UNESCO sites, seaports & bases |
 
 ## License
 

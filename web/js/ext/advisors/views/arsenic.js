@@ -368,12 +368,32 @@ export async function mount(ctx) {
     }
   });
 
-  // --- caveats & sources --------------------------------------------------------------------------------------
-  const foot = section(el, { title: t("Methodology & caveats", "วิธีการและข้อจำกัดข้อมูล") });
-  foot.insertAdjacentHTML("beforeend", `<p class="adv-note">${esc(t(
-    ars.caveats || "",
-    "ค่าตรวจวัด 23 สถานีมาจากชุดข้อมูลเปิดทางการของจังหวัดเชียงราย (chiangrai.gdcatalog.go.th / คพ.) โดยค่า '0' ในไฟล์ CSV หมายถึงไม่ได้เก็บตัวอย่างในรอบนั้น (ไม่ถูกนับเป็นค่าศูนย์จริง) และค่า '<0.010' คือต่ำกว่าขีดจำกัดการตรวจวัด (พล็อตในกราฟแนวโน้มที่ 0.005 มก./ล. และนับว่าผ่านเกณฑ์) เลนส์สารหนูระบายสีเฉพาะ Hex ที่มีสถานีตรวจวัดจริงเท่านั้น ไม่มีการประมาณค่าข้ามจังหวัด"
-  ))}</p>`);
+  // --- caution, methodology & validation references -----------------------------------------------------------
+  const foot = section(el, { title: t("Caution to use & validation references", "ข้อควรระวังการใช้งานและแหล่งอ้างอิงตรวจสอบ") });
+  foot.insertAdjacentHTML("beforeend", `
+    <div class="adv-caution">
+      <b>⚠ ${t("Caution — Not a live water-safety advisory", "ข้อควรระวัง — ไม่ใช่ประกาศความปลอดภัยน้ำดื่มแบบเรียลไทม์")}:</b>
+      <ul>
+        <li>${t(
+          "This dashboard visualizes official historical/multi-round CSV snapshots for public awareness and research only. Do <b>not</b> rely on it for drinking, cooking, agricultural, or medical decisions.",
+          "แดชบอร์ดนี้แสดงข้อมูลจากไฟล์ CSV ทางการย้อนหลังและรายรอบเพื่อการรับรู้และศึกษาเท่านั้น <b>ห้ามใช้ประกอบการตัดสินใจด้านการบริโภคน้ำ การเกษตร หรือการแพทย์</b>"
+        )}</li>
+        <li>${t(
+          "Provinces without monitoring CSVs appear as <b>no data</b> — this does <b>not</b> mean safe. Always follow live advisories from PCD, Provincial Waterworks Authority (PWA), and Chiang Rai PHO.",
+          "จังหวัดที่ไม่มีชุดข้อมูลตรวจวัดจะแสดงเป็น <b>ไม่มีข้อมูล</b> ซึ่ง<b>ไม่ได้หมายความว่าปลอดภัย</b> โปรดติดตามประกาศล่าสุดจาก คพ., กปภ. และ สสจ.เชียงราย โดยตรง"
+        )}</li>
+      </ul>
+    </div>
+    <p class="adv-note">${esc(t(
+      ars.caveats || "",
+      "ค่าตรวจวัด 23 สถานีมาจากชุดข้อมูลเปิดทางการของจังหวัดเชียงราย (chiangrai.gdcatalog.go.th / คพ.) โดยค่า '0' ในไฟล์ CSV หมายถึงไม่ได้เก็บตัวอย่างในรอบนั้น (ไม่ถูกนับเป็นค่าศูนย์จริง) และค่า '<0.010' คือต่ำกว่าขีดจำกัดการตรวจวัด (พล็อตในกราฟแนวโน้มที่ 0.005 มก./ล. และนับว่าผ่านเกณฑ์) เลนส์สารหนูระบายสีเฉพาะ Hex ที่มีสถานีตรวจวัดจริงเท่านั้น ไม่มีการประมาณค่าข้ามจังหวัด"
+    ))}</p>
+    <ul class="adv-refs">
+      <li><a href="https://chiangrai.gdcatalog.go.th/dataset/e1fc8a4f-1d5c-4571-aff2-89a35e554a08" target="_blank" rel="noopener noreferrer">${t("Chiang Rai Open Data — 23-Station × 8-Round Arsenic Monitoring CSV ↗", "บัญชีข้อมูลเปิดเชียงราย — CSV ตรวจวัดสารหนู 23 สถานี × 8 รอบ ↗")}</a></li>
+      <li><a href="https://chiangrai.gdcatalog.go.th/dataset/2e5aa282-25db-460c-ac6d-d38c4e1bf468" target="_blank" rel="noopener noreferrer">${t("Chiang Rai Open Data — Kok River 2017–2025 Historical Baseline CSV ↗", "บัญชีข้อมูลเปิดเชียงราย — CSV ข้อมูลฐานแม่น้ำกก พ.ศ. 2560–2568 ↗")}</a></li>
+      <li><a href="https://www.pcd.go.th/" target="_blank" rel="noopener noreferrer">${t("Pollution Control Department (PCD) — Official Live Advisories &amp; 0.010 mg/L Standard ↗", "กรมควบคุมมลพิษ (คพ.) — ประกาศสถานการณ์ล่าสุดและมาตรฐาน 0.010 มก./ล. ↗")}</a></li>
+      <li><button type="button" class="adv-link" data-pedia="Caution & Validation">${t("Full Caution, Limitations &amp; SHA-256 Checksums in the Almanac ›", "อ่านข้อควรระวังฉบับเต็มและรหัสตรวจสอบ SHA-256 ในสารานุกรม ›")}</button></li>
+    </ul>`);
   el.insertAdjacentHTML("beforeend", sourcesHtml(data, ["arsenic_thailand"]));
 
   // If opened via clicking a specific station or watchpoint, zoom right to it; otherwise frame the Kok-Sai basin!

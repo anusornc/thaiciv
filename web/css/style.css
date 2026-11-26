@@ -418,6 +418,20 @@ body.panel-open #lens-area { right: calc(394px + var(--dock-right, 0px)); }
 #pedia-body td.ic { width: 34px; vertical-align: middle; }
 #pedia-body td.nm { white-space: nowrap; }
 #pedia-body td.num { text-align: right; font-variant-numeric: tabular-nums; }
+#pedia-body .pedia-caution, .adv-caution {
+  margin: 12px 0; padding: 10px 14px; border-radius: 6px;
+  background: rgba(180, 68, 42, 0.14); border: 1px solid rgba(235, 130, 82, 0.55); border-left: 3px solid #f08a4b;
+  color: var(--ink); font-size: 13px; line-height: 1.5;
+}
+#pedia-body .pedia-caution b, .adv-caution b { color: #ffd09b; }
+#pedia-body .pedia-caution ul, .adv-caution ul { margin: 6px 0 2px; padding-left: 18px; }
+#pedia-body .pedia-caution li, .adv-caution li { margin: 3px 0; }
+#pedia-body .src-url { word-break: break-all; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; }
+#pedia-body .src-hash { display: inline-block; margin-top: 2px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; color: var(--ink-dim); }
+.adv-caution { font-size: 11.5px; padding: 8px 10px; margin: 8px 0 10px; }
+.adv-refs { margin: 8px 0 0; padding-left: 16px; font-size: 11.5px; line-height: 1.55; }
+.adv-refs li { margin: 3px 0; }
+.adv-refs a { color: var(--gold-bright); text-decoration: underline; text-underline-offset: 2px; }
 #pedia-body code { font-size: 11px; color: var(--ink-dim); word-break: break-all; }
 .res-ic { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--gold); color: #f8f0d8; box-shadow: 0 0 0 1px #120d06; }
 .lens-entry { display: grid; grid-template-columns: 40px 1fr; gap: 10px; align-items: start; }
