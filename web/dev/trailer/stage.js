@@ -21,7 +21,7 @@ import { cityDistricts, badgeOf } from "../../js/ext/cityView/districts.js";
 import { createMapLayer } from "../../js/ext/cityView/mapLayer.js";
 import { formatLensTick } from "../../js/ui/lenses.js";
 
-const LAYER_KEYS = ["roads", "rail", "hubs", "military", "wonders", "trade"];
+const LAYER_KEYS = ["roads", "rail", "hubs", "military", "wonders", "trade", "arsenic"];
 
 async function json(base, name) {
   const r = await fetch(`${base}${name}.json`);
@@ -31,7 +31,7 @@ async function json(base, name) {
 
 export async function loadStage(base = "../data/") {
   const names = ["world", "cities", "nation", "lenses", "sources", "resources", "states", "infrastructure", "military",
-    "wonders", "trade", "districts", "citizens"];
+    "wonders", "trade", "districts", "citizens", "arsenic"];
   const vals = await Promise.all(names.map((n) => json(base, n)));
   const data = Object.fromEntries(names.map((n, i) => [n, vals[i]]));
   const w = prepareWorld(data.world, data.cities, { resources: data.resources });
@@ -43,6 +43,62 @@ export async function loadStage(base = "../data/") {
   for (const n of ["infrastructure", "military", "wonders", "trade"]) model.setData(n, data[n]);
   const on = Object.fromEntries(LAYER_KEYS.map((k) => [k, false]));
   const layers = makeLayers(model, on, { app: null });
+
+  // Arsenic river monitoring stations + national watchpoints layer for the trailer
+  const ARS_COL = { severe: "#e03838", exceed: "#e88a2e", safe: "#38a872", watch: "#a06ee0" };
+  layers.push({
+    id: "arsenic",
+    z: 67,
+    minRpx: 1.5,
+    visible: () => !!on.arsenic && !!data.arsenic,
+    draw(ctx, vp, _w, o) {
+      const ars = data.arsenic;
+      if (!ars) return;
+      const { Rpx } = o;
+      const rSt = Math.max(5.5, Math.min(11, Rpx * 0.35));
+      const rWp = Math.max(6.5, Math.min(11.5, Rpx * 0.38));
+      o.screen();
+      const order = { safe: 0, exceed: 1, severe: 2 };
+      const sts = [...(ars.stations || [])].sort((a, b) => (order[a.severity] ?? 0) - (order[b.severity] ?? 0));
+      for (const s of sts) {
+        const [sx, sy] = o.toScreen(s.x, s.y);
+        ctx.save();
+        if (s.severity === "severe") {
+          ctx.beginPath(); ctx.arc(sx, sy, rSt + 4, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(224,56,56,0.34)"; ctx.fill();
+        }
+        ctx.beginPath(); ctx.arc(sx, sy, rSt, 0, Math.PI * 2);
+        ctx.fillStyle = ARS_COL[s.severity] || ARS_COL.exceed; ctx.fill();
+        ctx.lineWidth = 1.6; ctx.strokeStyle = "#16110a"; ctx.stroke();
+        if (s.severity === "severe") {
+          ctx.beginPath(); ctx.arc(sx, sy, rSt * 0.34, 0, Math.PI * 2);
+          ctx.fillStyle = "#fff4d8"; ctx.fill();
+        }
+        if (Rpx >= 14 && (s.severity === "severe" || s.severity === "safe")) {
+          const lbl = `${s.id} · ${s.exceed_rounds === 0 ? "<0.010" : s.max_as.toFixed(3)}`;
+          ctx.font = `700 10.5px -apple-system, "Thonburi", sans-serif`;
+          ctx.textBaseline = "middle"; ctx.textAlign = "left";
+          ctx.lineWidth = 3.2; ctx.strokeStyle = "rgba(10,14,20,0.9)";
+          ctx.strokeText(lbl, sx + rSt + 4, sy);
+          ctx.fillStyle = s.severity === "safe" ? "#a8f0c8" : "#ffe6c4";
+          ctx.fillText(lbl, sx + rSt + 4, sy);
+        }
+        ctx.restore();
+      }
+      for (const wp of ars.watchpoints || []) {
+        const [sx, sy] = o.toScreen(wp.x, wp.y);
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(sx, sy - rWp); ctx.lineTo(sx + rWp, sy); ctx.lineTo(sx, sy + rWp); ctx.lineTo(sx - rWp, sy);
+        ctx.closePath();
+        ctx.fillStyle = ARS_COL.watch; ctx.fill();
+        ctx.lineWidth = 1.6; ctx.strokeStyle = "#f2d68a"; ctx.stroke();
+        ctx.restore();
+      }
+      o.world();
+    },
+  });
+  layers.sort((a, b) => (a.z ?? 0) - (b.z ?? 0));
 
   // City-type badges on the banners, as the City View extension hands them to render/banners.js.
   const cityBadges = new Map();

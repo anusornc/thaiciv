@@ -4,8 +4,8 @@
 import { drawIcon, hasIcon } from "../../js/icons.js";
 import { drawCitizen } from "../../js/render/art/people.js";
 
-export const SERIF = '"Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif';
-export const SANS = '-apple-system, "Helvetica Neue", "Segoe UI", system-ui, sans-serif';
+export const SERIF = '"Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Thonburi", "Sukhumvit Set", "Noto Sans Thai", serif';
+export const SANS = '-apple-system, "Helvetica Neue", "Thonburi", "Sukhumvit Set", "Noto Sans Thai", "Segoe UI", system-ui, sans-serif';
 const GOLD = "#c9a45c", GOLD_HI = "#ecd08e", INK = "#efe4c6", INK_DIM = "#b9ab88";
 
 // --- timing helpers -----------------------------------------------------------------------------------------------
@@ -314,8 +314,8 @@ export function lensLegend(ctx, W, H, A, alpha, B = null, k = 0) {
   ctx.restore();
 }
 
-/** A gold ring that pulses around a point on the map (to point at the city a caption names). */
-export function pulseRing(ctx, x, y, r, alpha, t) {
+/** A ring that pulses around a point on the map (gold by default, or custom alert color). */
+export function pulseRing(ctx, x, y, r, alpha, t, color = GOLD_HI, glow = "rgba(255,210,120,.9)") {
   if (alpha <= 0) return;
   ctx.save();
   for (let i = 0; i < 2; i++) {
@@ -324,8 +324,8 @@ export function pulseRing(ctx, x, y, r, alpha, t) {
     ctx.beginPath();
     ctx.arc(x, y, r * (0.75 + 0.6 * p), 0, Math.PI * 2);
     ctx.lineWidth = 5 * (1 - p) + 1.5;
-    ctx.strokeStyle = GOLD_HI;
-    ctx.shadowColor = "rgba(255,210,120,.9)";
+    ctx.strokeStyle = color;
+    ctx.shadowColor = glow;
     ctx.shadowBlur = 18;
     ctx.stroke();
   }
@@ -413,7 +413,7 @@ export function cityPanel(ctx, W, H, P, alpha, slide, tt) {
   ctx.font = `600 24px ${SANS}`;
   spacing(ctx, 4);
   ctx.fillStyle = GOLD_HI;
-  ctx.fillText("CITIZENS · WORKFORCE", px, cy);
+  ctx.fillText("CITIZENS · โครงสร้างเศรษฐกิจ", px, cy);
   if (P.highlight) {
     cy += 42;
     ctx.font = `600 30px ${SANS}`;
@@ -467,7 +467,7 @@ export function cityPanel(ctx, W, H, P, alpha, slide, tt) {
   ctx.font = `600 24px ${SANS}`;
   spacing(ctx, 4);
   ctx.fillStyle = GOLD_HI;
-  ctx.fillText("DISTRICTS", px, cy);
+  ctx.fillText("DISTRICTS · เขตเศรษฐกิจเฉพาะทาง", px, cy);
   cy += 26;
   P.districts.forEach((d, i) => {
     const a = smooth((tt - 1.2 - i * 0.25) / 0.3);

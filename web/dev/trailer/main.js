@@ -436,3 +436,10 @@ T.state = { phase: "ready" };
 $("btn-render").disabled = false;
 T.preview(0);
 say(`Ready: ${sb.frames} frames at ${sb.fps} fps. Press Render.`);
+
+// Optional automated render trigger: ?autorender=1&save=1&ss=1
+const qp = new URLSearchParams(location.search);
+if (qp.get("ss") === "1") { setSS(1); $("opt-ss").checked = false; }
+if (qp.get("autorender") === "1") {
+  T.render({ save: qp.get("save") === "1", sound: qp.get("sound") !== "0" }).catch((e) => console.error("autorender failed", e));
+}
