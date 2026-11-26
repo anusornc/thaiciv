@@ -1,5 +1,7 @@
 # thaiciv — Thailand as a 4X Strategy Map, Built from Real Public Data
 
+**Live Map:** [https://anusornc.github.io/thaiciv/](https://anusornc.github.io/thaiciv/) · [ภาษาไทย (`#lang=th`)](https://anusornc.github.io/thaiciv/#lang=th) · [Water & Arsenic Crisis (`#advisor=arsenic`)](https://anusornc.github.io/thaiciv/#advisor=arsenic)
+
 A Civilization-style strategy map visualizer for **Thailand (ประเทศไทย)** — covering all **77 provinces (จังหวัด)** and **928 districts (อำเภอ / เขต)** on an **8 km Albers equal-area hex grid**, built from 13 live, verified Thai & global public data sources with zero invented numbers.
 
 Built on top of the MIT-licensed [`usaciv`](https://karpathy.ai/usaciv/) Canvas 2D + ES module visualization engine by Andrej Karpathy.
