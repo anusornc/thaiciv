@@ -1,5 +1,6 @@
 # Pipeline raw downloads & interim caches (reproducible via `uv run python -m pipeline all`)
-data/
+# Leading slash keeps web/data/*.json tracked for static hosting & GitHub Pages
+/data/
 
 # Python / uv
 .venv/
